@@ -1,0 +1,185 @@
+:root {
+  --bg: #0e0a07;          /* 夜に使うので暗い木の色（アイコンの地と同じ系統） */
+  --surface: #1a130e;
+  --surface-2: #241a13;
+  --line: rgba(236, 222, 200, 0.12);
+  --fg: #eee3d2;
+  --muted: #a8998a;
+  --accent: #fff3c9;
+  --danger: #c4513f;
+  --wak-bg: #1a130e;
+  --wak-fg: #eee3d2;
+  --wak-accent: #fff3c9;
+  --wak-accent-fg: #2b1b12;
+}
+
+* { box-sizing: border-box; }
+
+/* Safari 26 の上下バーの色は html の背景から取られる。body と同じ色にしておく */
+html { background-color: var(--bg); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: default; opacity: 0.35; }
+[hidden] { display: none !important; }
+p { margin: 0; }
+
+/* 画面の端に置くものはセーフエリアの分だけ内側に。高さは 100vh ではなく 100dvh */
+.app {
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding:
+    max(8px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  touch-action: manipulation;   /* ダブルタップ拡大を止める */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- 上の帯 ---------- */
+
+.bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 48px; }
+.bar__name { font-size: 11px; letter-spacing: 0.18em; color: var(--muted); font-weight: 600; }
+.bar__gear { justify-self: end; }
+.year { display: flex; align-items: center; gap: 2px; }
+.year__num { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: center; letter-spacing: 0.04em; }
+.icon-btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 0; background: none; border-radius: 12px;
+  font-size: 26px; line-height: 1; color: var(--muted);
+}
+.icon-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.icon-btn:not(:disabled):active { background: var(--surface); }
+
+/* ---------- 切り株 ---------- */
+
+/* 上の帯と今日のあいだの、まん中に置く */
+.stump { position: relative; width: min(100%, 440px); aspect-ratio: 1; margin: auto; flex: none; }
+.stump canvas { display: block; width: 100%; height: 100%; }
+
+.coach {
+  position: absolute; inset: 8%;
+  border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: 12%;
+  text-align: center;
+  background: rgba(14, 10, 7, 0.86);
+  font-size: 14px; line-height: 1.6;
+}
+.coach__tag { font-weight: 600; font-size: 15px; color: var(--accent); }
+
+/* ---------- 今日 ---------- */
+
+.today { padding: 16px 0 8px; text-align: center; }
+/* 前の年は見るだけ。場所は残して、切り株が動かないようにする */
+.today--away { visibility: hidden; }
+.today__ask { font-size: 17px; font-weight: 600; }
+.today__done { font-size: 13px; color: var(--muted); min-height: 1.6em; margin-top: 2px; }
+
+.moods { display: flex; justify-content: space-between; gap: 4px; margin-top: 12px; }
+.mood {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 0; background: none; padding: 4px 0;
+}
+.mood__dot {
+  width: 56px; height: 56px; border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--gap, var(--bg)), 0 0 0 3px transparent;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.mood:active .mood__dot { transform: scale(0.94); }
+.mood[aria-pressed="true"] .mood__dot { box-shadow: 0 0 0 3px var(--gap, var(--bg)), 0 0 0 5.5px var(--accent); }
+.mood__name { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.mood[aria-pressed="true"] .mood__name { color: var(--fg); font-weight: 600; }
+
+/* ---------- 下の隅 ---------- */
+
+.foot { padding-top: 14px; }
+.foot__row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.foot__kit { display: flex; gap: 8px; }
+.credit { display: block; text-align: center; margin-top: 10px; font-size: 11px; color: var(--muted); }
+.pill {
+  min-height: 36px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+.pill--strong { background: var(--accent); color: #2b1b12; border-color: transparent; font-weight: 600; }
+
+/* ---------- シート（下から出る）。隠すときは display: none ---------- */
+
+.sheet-wrap {
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+.sheet {
+  width: min(100%, 480px);
+  max-height: 88dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border-radius: 20px 20px 0 0;
+  padding: 8px max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  animation: sheet-up 0.22s ease-out;
+}
+.sheet:focus { outline: none; }
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0.4; } }
+.sheet__grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 12px; }
+.sheet__title { margin: 0 0 4px; font-size: 18px; }
+.sheet__sub { margin: 22px 0 10px; font-size: 14px; color: var(--muted); font-weight: 600; }
+.sheet__close { display: block; margin: 22px auto 0; min-width: 120px; min-height: 44px; }
+.muted { color: var(--muted); font-size: 14px; }
+.moods--sheet { --gap: var(--surface); }
+.moods--sheet .mood__dot { width: 48px; height: 48px; }
+.text-btn { display: block; margin: 14px auto 0; border: 0; background: none; color: var(--muted); font-size: 14px; min-height: 44px; padding: 0 12px; text-decoration: underline; text-underline-offset: 3px; }
+
+.bars { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 5.5em 1fr 2em; align-items: center; gap: 10px; font-size: 13px; }
+.bar-row__name { color: var(--muted); }
+.bar-row__track { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.bar-row__fill { display: block; height: 100%; border-radius: 4px; min-width: 0; }
+.bar-row__n { text-align: right; font-variant-numeric: tabular-nums; }
+#month-count { margin-top: 10px; }
+
+/* 設定 */
+.row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.seg { display: flex; background: var(--surface-2); border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: none; border-radius: 8px; padding: 0 12px; min-height: 38px; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--bg); color: var(--fg); font-weight: 600; }
+.group { display: grid; gap: 8px; margin-top: 18px; }
+.wide { width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 12px; font-size: 14px; text-align: left; padding: 0 16px; }
+.wide--warn { color: #e0907f; }
+.wide--danger { background: var(--danger); border-color: transparent; color: #fff; font-weight: 600; }
+.confirm { display: grid; gap: 8px; padding: 12px; border-radius: 12px; background: var(--bg); font-size: 14px; line-height: 1.6; }
+.confirm__btns { display: flex; justify-content: flex-end; gap: 8px; }
+.note { font-size: 12px; line-height: 1.7; color: var(--muted); margin-top: 6px; }
+
+.more { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.more__item { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border: 1px dashed var(--line); background: none; border-radius: 12px; font-size: 14px; text-align: left; color: var(--muted); }
+.more__item svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.more__name { flex: 1; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet { animation: none; }
+  .mood__dot { transition: none; }
+}
+
+/* 横に広い画面（PC）では、切り株と今日を少しゆったり */
+@media (min-height: 900px) and (min-width: 700px) {
+  .app { padding-top: 32px; padding-bottom: 28px; }
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e0a07">
+  <meta name="description" content="寝る前に今日の気分を 5 色から 1 つ押すと、切り株の断面の一番外に 1 日ぶんの帯が足される。1 か月で 1 周、1 年で 12 本の年輪になり、その年の気分が 1 枚の絵として残る。">
+  <title>RINGGRAIN — 毎日の気分が年輪になる</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RINGGRAIN">
+  <meta property="og:title" content="RINGGRAIN — 毎日の気分が年輪になる">
+  <meta property="og:description" content="寝る前に今日の気分を 5 色から 1 つ押すと、切り株の断面の一番外に 1 日ぶんの帯が足される。1 か月で 1 周、1 年で 12 本の年輪になり、その年の気分が 1 枚の絵として残る。">
+  <meta property="og:url" content="https://t-of.github.io/ringgrain/">
+  <meta property="og:image" content="https://t-of.github.io/ringgrain/icons/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- apple-mobile-web-app-status-bar-style は付けない（black-translucent だと iOS 26 で上部が隠れる） -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="RINGGRAIN">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="./webapp-kit/webapp-kit.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="bar">
+      <span class="bar__name">RINGGRAIN</span>
+      <nav class="year">
+        <button class="icon-btn" id="prev" type="button" data-t-label="year.prev">&#8249;</button>
+        <span class="year__num" id="year">2026</span>
+        <button class="icon-btn" id="next" type="button" data-t-label="year.next">&#8250;</button>
+      </nav>
+      <button class="icon-btn bar__gear" id="open-settings" type="button" data-t-label="btn.settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5"/></svg>
+      </button>
+    </header>
+
+    <section class="stump" id="stump-wrap">
+      <canvas id="stump" role="img" aria-label="RINGGRAIN"></canvas>
+      <div class="coach" id="coach" hidden>
+        <p class="coach__tag" data-t="tagline">毎日の気分が年輪になる</p>
+        <p data-t="coach.1">寝る前に、今日の気分の色を 1 つ押す</p>
+        <p data-t="coach.2">1 日ずつ外に帯が足されて、1 か月で 1 周、1 年で 12 本の年輪になる</p>
+        <button class="pill pill--strong" id="coach-ok" type="button" data-t="coach.ok">はじめる</button>
+      </div>
+    </section>
+
+    <section class="today" id="today">
+      <p class="today__ask" id="ask"></p>
+      <p class="today__done" id="done"></p>
+      <div class="moods" id="moods"></div>
+    </section>
+
+    <footer class="foot">
+      <div class="foot__row">
+        <button class="pill" id="save-image" type="button" data-t="btn.image">画像で保存</button>
+        <div class="foot__kit">
+          <button class="pill" data-wak="install" hidden data-t="wak.install">アプリにする</button>
+          <button class="pill" data-wak="share" data-t="btn.share">共有</button>
+        </div>
+      </div>
+      <a class="credit" href="/" data-t="footer.tof">T.OF... のアプリ</a>
+    </footer>
+  </main>
+
+  <!-- その日のシート -->
+  <div class="sheet-wrap" id="day-sheet" hidden>
+    <div class="sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="day-title">
+      <div class="sheet__grip"></div>
+      <h2 class="sheet__title" id="day-title"></h2>
+      <p class="muted" id="day-state"></p>
+      <div class="moods moods--sheet" id="day-moods"></div>
+      <button class="text-btn" id="day-clear" type="button" data-t="day.clear">この日を消す</button>
+      <h3 class="sheet__sub" id="month-title"></h3>
+      <div class="bars" id="month-bars"></div>
+      <p class="muted" id="month-count"></p>
+      <button class="pill sheet__close" type="button" data-close data-t="btn.close">閉じる</button>
+    </div>
+  </div>
+
+  <!-- 設定 -->
+  <div class="sheet-wrap" id="settings-sheet" hidden>
+    <div class="sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="sheet__grip"></div>
+      <h2 class="sheet__title" id="settings-title" data-t="btn.settings">設定</h2>
+      <div class="row">
+        <span data-t="set.sound">音</span>
+        <div class="seg" id="seg-sound">
+          <button type="button" data-v="on" data-t="set.on">オン</button>
+          <button type="button" data-v="off" data-t="set.off">オフ</button>
+        </div>
+      </div>
+      <div class="row">
+        <span data-t="set.lang">言葉</span>
+        <div class="seg" id="seg-lang">
+          <button type="button" data-v="auto" data-t="set.lang.auto">自動</button>
+          <button type="button" data-v="ja" lang="ja">日本語</button>
+          <button type="button" data-v="en" lang="en">English</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <button class="wide" id="export" type="button" data-t="set.export">記録を書き出す</button>
+        <button class="wide" id="import" type="button" data-t="set.import">記録を読み込む</button>
+        <div class="confirm" id="import-confirm" hidden>
+          <p id="import-ask"></p>
+          <div class="confirm__btns">
+            <button class="pill" id="import-cancel" type="button" data-t="btn.close">閉じる</button>
+            <button class="pill pill--strong" id="import-ok" type="button" data-t="set.import.ok">読み込む</button>
+          </div>
+        </div>
+        <button class="wide wide--warn" id="delete" type="button" data-t="set.delete">記録をすべて消す</button>
+        <div class="confirm" id="delete-confirm" hidden>
+          <button class="wide" id="delete-export" type="button" data-t="set.delete.first">先に書き出す</button>
+          <button class="wide wide--danger" id="delete-ok" type="button" data-t="set.delete.ask">本当に消す（元に戻せません）</button>
+        </div>
+        <p class="note" data-t="set.privacy"></p>
+        <p class="note" id="ios-hint" data-t="set.ios" hidden></p>
+      </div>
+
+      <h3 class="sheet__sub" data-t="more.title">もっと</h3>
+      <ul class="more" id="more"></ul>
+
+      <button class="pill sheet__close" type="button" data-close data-t="btn.close">閉じる</button>
+    </div>
+  </div>
+
+  <input type="file" id="file" accept="application/json,.json" hidden>
+
+  <script src="./webapp-kit/webapp-kit.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
