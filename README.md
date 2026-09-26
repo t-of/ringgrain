@@ -4,7 +4,7 @@
 
 ## 🔗 リンク
 
-- 遊ぶ: https://t-of.github.io/ringgrain/
+- 遊ぶ: https://ringgrain.t-of.workers.dev/
 - 制作: [T.OF...](https://t-of.github.io/)
 
 ## 遊び方

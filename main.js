@@ -1,7 +1,7 @@
 import * as L from './logic.js';
 
-// localStorage はほかのアプリと共有される（同じ t-of.github.io のため）。
-// キーは必ず 'ringgrain.' で始める。
+// Cloudflare の別オリジンなので localStorage は他アプリと共有されないが、
+// キーは念のため必ず 'ringgrain.' で始める。
 const STORE = 'ringgrain.';
 
 function load(key, fallback) {
@@ -100,7 +100,7 @@ const GAP = '#150e09';      // 付けなかった日（暗いすき間）
 const PITH_COLOR = '#2b1b12';
 const BARK = '#1d130c';
 const BG = '#0e0a07';
-const SITE = 'https://t-of.github.io/ringgrain/';
+const SITE = 'https://ringgrain.t-of.workers.dev/';
 
 // ---------- 保存 ----------
 
@@ -614,7 +614,7 @@ function makeImage(year) {
   ctx.fillText('RINGGRAIN', 60, H - 56);
   ctx.textAlign = 'right';
   ctx.font = `400 26px ${font}`;
-  ctx.fillText('t-of.github.io/ringgrain', W - 60, H - 56);
+  ctx.fillText('ringgrain.t-of.workers.dev', W - 60, H - 56);
   return c;
 }
 

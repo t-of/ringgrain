@@ -3,12 +3,11 @@
 // 自分のファイルは network-first（つながっていれば常に最新、圏外なら保存しておいた版）。
 // Google Fonts は変わらないので cache-first。
 //
-// 注意: キャッシュ（CacheStorage）は t-of.github.io のすべてのアプリで共有されている。
-// 古いキャッシュを消すときは、必ず自分の PREFIX で始まるものだけを消す。
-// keys.filter(k => k !== CACHE) のように書くと、ほかのアプリのキャッシュまで消してしまう。
+// 注意: PREFIX で始まらないキャッシュを消さない書き方はほかのアプリとの共有オリジンでも安全なので、
+// このまま踏襲する（古いキャッシュを消すときは必ず自分の PREFIX で始まるものだけを消す）。
 
 const PREFIX = 'ringgrain-';
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = `${PREFIX}${VERSION}`;
 const FONT_CACHE = `${PREFIX}fonts`;
 

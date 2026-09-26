@@ -1,6 +1,6 @@
 # RINGGRAIN
 
-T.OF... のアプリ。https://t-of.github.io/ringgrain/
+T.OF... のアプリ。https://ringgrain.t-of.workers.dev/（Cloudflare の別オリジン）
 
 - ルールは本部の `~/GitHub/tof/t-of.github.io/RULES.md` に従う（全アプリ共通）。ブランドは `docs/BRAND.md`。
 - 直したら本部で `npm run audit:browser -- ringgrain` を通す。
