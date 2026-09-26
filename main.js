@@ -81,6 +81,7 @@ const STR = {
   'share.image': ['{year} 年の年輪 #RINGGRAIN', 'My {year} in tree rings #RINGGRAIN'],
   'share.app': ['毎日の気分が年輪になる RINGGRAIN', 'RINGGRAIN — your moods, grown into tree rings'],
   'footer.tof': ['T.OF... のアプリ', 'An app by T.OF...'],
+  'footer.contact': ['問い合わせ', 'Contact'],
   'wak.install': ['アプリにする', 'Install'],
 };
 
