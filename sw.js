@@ -7,7 +7,7 @@
 // このまま踏襲する（古いキャッシュを消すときは必ず自分の PREFIX で始まるものだけを消す）。
 
 const PREFIX = 'ringgrain-';
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `${PREFIX}${VERSION}`;
 const FONT_CACHE = `${PREFIX}fonts`;
 

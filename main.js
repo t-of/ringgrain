@@ -30,6 +30,7 @@ function setAudioSession(soundOn) {
 
 const STR = {
   'tagline': ['毎日の気分が年輪になる', 'Your moods, grown into tree rings'],
+  'title': ['RINGGRAIN — 気分記録：日々の気分が年輪になる日記', 'RINGGRAIN — Mood Tracker: Your Days, Grown Into Tree Rings'],
   'today.ask': ['{date}の気分は？', 'How was {date}?'],
   'today.done': ['今日: {mood}', 'Today: {mood}'],
   'mood.0': ['最高', 'Great'],
@@ -380,6 +381,7 @@ function applyLang() {
   const nav = (navigator.language || '').toLowerCase();
   lang = settings.lang === 'auto' ? (nav.startsWith('ja') ? 'ja' : 'en') : settings.lang;
   document.documentElement.lang = lang;
+  document.title = t('title');
   WebAppKit.init({ lang, title: 'RINGGRAIN', text: t('share.app') });
   document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll('[data-t-label]').forEach((el) => { el.setAttribute('aria-label', t(el.dataset.tLabel)); });
